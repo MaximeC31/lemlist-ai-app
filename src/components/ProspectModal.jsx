@@ -10,7 +10,7 @@ import {
 } from "@heroui/react";
 import { Edit, Mail, X } from "lucide-react";
 import { postGenerateResponse } from "../utils/fetcher";
-import { RESPONSE_GENERATOR_API_URL } from "../utils/api";
+import { RESPONSE_GENERATOR_API_URL, SEND_EMAIL_API_URL } from "../utils/api";
 import { campaignsFacade } from "../utils/dataFacade";
 
 export default function ProspectModal({ isOpen, onClose, prospect, campaignId, onProspectUpdate }) {
@@ -200,8 +200,51 @@ export default function ProspectModal({ isOpen, onClose, prospect, campaignId, o
     console.log("Envoi annulé");
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     console.log("Validation réponse IA:", editableValue);
+    
+    try {
+      // Construire le body de la requête avec les données du localStorage et la réponse IA
+      const requestBody = {
+        sendUserId: prospect.sendUserId,
+        sendUserEmail: "lpincon@enerlis.eu",
+        sendUserMailboxId: prospect.sendUserMailboxId,
+        contactId: prospect.contactId,
+        leadId: prospect.lead_id,
+        subject: `Re: ${prospect.content?.replace(/^Re:\s*/i, '')}`,
+        message: editableValue
+      };
+
+      console.log("🚀 Envoi de l'email avec les données:", requestBody);
+      console.log("📋 Vérification des données:");
+      console.log("  - sendUserId:", requestBody.sendUserId);
+      console.log("  - sendUserEmail:", requestBody.sendUserEmail);
+      console.log("  - sendUserMailboxId:", requestBody.sendUserMailboxId);
+      console.log("  - contactId:", requestBody.contactId);
+      console.log("  - leadId:", requestBody.leadId);
+      console.log("  - subject:", requestBody.subject);
+      console.log("  - message length:", requestBody.message?.length || 0);
+
+      const response = await fetch(SEND_EMAIL_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("✅ Email envoyé avec succès:", result);
+      } else {
+        const errorText = await response.text();
+        console.error("❌ Erreur lors de l'envoi de l'email:", response.status, response.statusText);
+        console.error("❌ Détail de l'erreur:", errorText);
+      }
+    } catch (error) {
+      console.error("❌ Erreur lors de l'envoi de l'email:", error);
+    }
+    
     setIsValidating(false);
     setCountdown(0);
   };

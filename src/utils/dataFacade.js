@@ -30,6 +30,11 @@ const mapResponseToProspect = (response, campaignId, index) => {
     body: response.body || "",
     clean_body: "",
     receivedAt: response.received_at || "",
+    sendUserId: response.sendUserId || "",
+    sendUserEmail: response.sendUserEmail || "",
+    sendUserMailboxId: response.sendUserMailboxId || "",
+    contactId: response.contactId || "",
+    lead_id: response.lead_id || "",
   };
 };
 

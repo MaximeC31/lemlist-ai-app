@@ -27,6 +27,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       },
+      '/api/send_email': {
+        target: 'https://collectorlemlist-production.up.railway.app',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      },
       '/api': {
         target: 'https://collectorlemlist-production.up.railway.app',
         changeOrigin: true,

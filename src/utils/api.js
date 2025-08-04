@@ -12,3 +12,6 @@ export const CLASSIFY_API_URL = isProduction
 export const RESPONSE_GENERATOR_API_URL = isProduction
   ? "https://responsegenerator-production.up.railway.app/generate"
   : "/api/generate";
+export const SEND_EMAIL_API_URL = isProduction
+  ? "https://collectorlemlist-production.up.railway.app/send_email"
+  : "/api/send_email";
